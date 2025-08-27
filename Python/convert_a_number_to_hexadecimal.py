@@ -3,10 +3,10 @@ class Solution:
     def toHex(self, num: int) -> str:
         if 0 ==  num:
             return '0'
-        if 0 > num:
-            num = 4294967295 + num + 1
         characters: tuple = ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f')
         hex_: str = ''
+        if 0 > num:
+            num = 2 ** 32 + num
         while 0 < num:
             p: int = num & 15
             num >>= 4
