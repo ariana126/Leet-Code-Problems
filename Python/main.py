@@ -1,4 +1,4 @@
-from three_sum_closest import examine
+from perfect_number import examine
 
 if __name__ == '__main__':
     examine()
