@@ -1,3 +1,4 @@
+import time
 from typing import Any
 
 class Logger:
@@ -41,8 +42,15 @@ class Examiner:
         self.method_name = method_name
 
     def run(self, testcases: tuple[Testcase, ...]) -> None:
+        print('Start.\n')
+
+        execution_times: list[tuple[Testcase, float]] = []
         for testcase in testcases:
+            start: float = time.perf_counter()
             output: Any = getattr(self.solution, self.method_name)(*testcase.inputs)
+            end: float = time.perf_counter()
+            execution_times.append((testcase, end - start))
+
             if testcase.validation.should_be_on_input():
                 output = testcase.inputs[testcase.validation.input_index]
             if testcase.expected != output:
@@ -50,3 +58,18 @@ class Examiner:
                 for log in Logger.release():
                     print(*log)
                 print('\n')
+
+        print('Execution times:')
+        total_time: float = 0
+        max_time: float = 0
+        min_time: float = float('inf')
+        for execution_time in execution_times:
+            print(f'{execution_time[1]*1_000_000:.2f} μs {execution_time[0].inputs}')
+            total_time += execution_time[1]
+            max_time = max(max_time, execution_time[1])
+            min_time = min(min_time, execution_time[1])
+        print(f'\nAverage: {total_time/len(execution_times)*1_000_000:.2f} μs')
+        print(f'Max: {max_time*1_000_000:.2f} μs')
+        print(f'Min: {min_time*1_000_000:.2f} μs')
+
+        print('\nDone.')
