@@ -1,4 +1,4 @@
-from binary_tree_postorder_traversal import examine
+from remove_linked_list_elements import examine
 
 if __name__ == '__main__':
     examine()
