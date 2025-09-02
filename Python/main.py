@@ -1,4 +1,4 @@
-from remove_linked_list_elements import examine
+from isomorphic_strings import examine
 
 if __name__ == '__main__':
     examine()
