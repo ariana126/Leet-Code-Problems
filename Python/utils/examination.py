@@ -1,3 +1,4 @@
+import copy
 import time
 from typing import Any
 
@@ -5,7 +6,7 @@ class Logger:
     logs: list[list[Any]] = []
     @classmethod
     def log(cls, *messages) -> None:
-        cls.logs.append(list(messages))
+        cls.logs.append(copy.deepcopy(list(messages)))
     @classmethod
     def release(cls)->list[Any]:
         logs = cls.logs
@@ -58,6 +59,7 @@ class Examiner:
                 for log in Logger.release():
                     print(*log)
                 print('\n')
+            Logger.release()
 
         print('Execution times:')
         total_time: float = 0

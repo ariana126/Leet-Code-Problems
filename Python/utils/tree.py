@@ -51,5 +51,13 @@ class TreeNode:
             i -= 1
         return nodes[0:i+1]
 
+    def __eq__(self, other):
+        # TODO: Implement a better way
+        if self is None and other is None:
+            return True
+        if self is None or other is None:
+            return False
+        return self.to_list() == other.to_list()
+
     def __repr__(self):
         return str(self.to_list())

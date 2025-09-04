@@ -32,6 +32,7 @@ class ListNode:
         return str(self.to_list())
 
     def __eq__(self, other):
+        # TODO: Implement a better way
         if self is None and other is None:
             return True
         elif self is None or other is None:
