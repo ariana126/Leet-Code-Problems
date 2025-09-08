@@ -17,7 +17,7 @@ class TreeNode:
         i: int = 1
         while len(nodes) > i:
             for node in current_depth:
-                if nodes[i] is not None:
+                if len(nodes) > i and nodes[i] is not None:
                     node.left = TreeNode(nodes[i])
                     next_depth.append(node.left)
                 if len(nodes) > i + 1 and nodes[i + 1] is not None:
