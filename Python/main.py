@@ -1,4 +1,4 @@
-from kth_largest_element_in_a_stream import examine
+from design_hashmap import examine
 
 if __name__ == '__main__':
     examine()
