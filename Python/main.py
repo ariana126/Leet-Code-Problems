@@ -1,4 +1,4 @@
-from third_maximum_number import examine
+from add_strings import examine
 
 if __name__ == '__main__':
     examine()
