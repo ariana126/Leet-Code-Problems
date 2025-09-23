@@ -1,4 +1,4 @@
-from repeated_substring_pattern import examine
+from construct_the_rectangle import examine
 
 if __name__ == '__main__':
     examine()
