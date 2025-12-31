@@ -1,4 +1,4 @@
-from student_attendance_record_1 import examine
+from reverse_words_in_a_string_3 import examine
 
 if __name__ == '__main__':
     examine()
