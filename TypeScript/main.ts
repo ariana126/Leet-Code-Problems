@@ -1,3 +1,3 @@
-import { examine } from "./solutions/maximum-depth-of-n-ary-tree.ts";
+import { examine } from "./solutions/valid-perfect-square.ts";
 
 examine();
