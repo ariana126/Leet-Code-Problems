@@ -51,40 +51,52 @@ export abstract class ExaminerInterface {
 }
 
 export abstract class FullReviewExaminer extends ExaminerInterface {
+    private static readonly RED = '\x1b[31m';
+    private static readonly GREEN = '\x1b[32m';
+    private static readonly YELLOW = '\x1b[33m';
+    private static readonly DIM = '\x1b[2m';
+    private static readonly RESET = '\x1b[0m';
+
     run(testcases: readonly TestcaseInterface[]): void {
         const executionTimes: Array<[TestcaseInterface, number]> = [];
+        let passCount = 0;
+
         for (const testcase of testcases) {
             const start = performance.now();
             const result = this.examine(testcase);
             const end = performance.now();
             executionTimes.push([testcase, end - start]);
-            if (!result.passed) {
-                console.log(`Wrong: ${testcase.id()} -> ${result.note}`);
-                for (const log of Logger.release()) {
-                    console.log(...log);
+
+            if (result.passed) {
+                passCount++;
+            } else {
+                const logs = Logger.release();
+                console.log(`${FullReviewExaminer.RED}✗ ${testcase.id()}${FullReviewExaminer.RESET}`);
+                console.log(`  ${result.note}`);
+                for (const log of logs) {
+                    console.log(' ', ...log);
                 }
                 console.log('');
             }
             Logger.release();
         }
 
-        console.log('\nExecution times:');
-        let totalTime = 0;
-        let maxTime = 0;
-        let minTime = Infinity;
-        for (const [testcase, elapsed] of executionTimes) {
-            console.log(`${(elapsed * 1000).toFixed(2)} μs ${testcase.id()}`);
-            totalTime += elapsed;
-            if (elapsed > maxTime) maxTime = elapsed;
-            if (elapsed < minTime) minTime = elapsed;
-        }
+        const n = executionTimes.length;
+        const failCount = n - passCount;
+        const allPassed = failCount === 0;
+        const summaryColor = allPassed ? FullReviewExaminer.GREEN : FullReviewExaminer.RED;
+        const passIcon = allPassed ? '✓' : '✗';
+        console.log(`${summaryColor}${passIcon} ${passCount}/${n} passed${FullReviewExaminer.RESET}`);
+
         const sorted = [...executionTimes].sort((a, b) => a[1] - b[1]).map(([, t]) => t);
-        const n = sorted.length;
+        const totalTime = sorted.reduce((s, t) => s + t, 0);
         const percentile = (p: number) => sorted[Math.min(Math.floor(p / 100 * n), n - 1)]! * 1000;
-        console.log('\n');
-        console.log(`p50: ${percentile(50).toFixed(2)} μs`);
-        console.log(`p95: ${percentile(95).toFixed(2)} μs`);
-        console.log(`Average: ${(totalTime / n * 1000).toFixed(2)} μs`);
+
+        console.log(`\n${FullReviewExaminer.YELLOW}Execution times:${FullReviewExaminer.RESET}`);
+        for (const [testcase, elapsed] of executionTimes) {
+            console.log(`  ${FullReviewExaminer.DIM}${(elapsed * 1000).toFixed(2).padStart(8)} μs${FullReviewExaminer.RESET}  ${testcase.id()}`);
+        }
+        console.log(`\n  p50 ${percentile(50).toFixed(2)} μs  p95 ${percentile(95).toFixed(2)} μs  avg ${(totalTime / n * 1000).toFixed(2)} μs`);
     }
 
     abstract examine(testcase: TestcaseInterface): TestcaseResult;
