@@ -1,3 +1,3 @@
-import { examine } from "./solutions/valid-perfect-square.ts";
+import { examine } from "./solutions/longest-continuous-increasing-subsequence";
 
 examine();
